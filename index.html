@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskMaster Pro - Advanced Workspace</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Header / App Bar -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo">
+        <i class="fa-solid fa-list-check"></i>
+        <span>TaskMaster Pro</span>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <button class="icon-btn" id="themeToggle" title="Toggle Dark/Light Mode">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+      <button class="btn btn-secondary" id="exportBtn">
+        <i class="fa-solid fa-file-export"></i> Export JSON
+      </button>
+      <button class="btn btn-secondary" id="importBtnTrigger">
+        <i class="fa-solid fa-file-import"></i> Import
+      </button>
+      <input type="file" id="importFileInput" accept=".json" style="display: none;">
+    </div>
+  </header>
+
+  <!-- Main Dashboard Container -->
+  <main class="dashboard-container">
+    
+    <!-- Left Sidebar / Filters -->
+    <aside class="sidebar">
+      
+      <!-- User Profile / Workspace Header -->
+      <div class="workspace-card">
+        <div class="avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+        <div class="workspace-info">
+          <h3>Mukesh's Workspace</h3>
+          <p>Full-Stack Productivity</p>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Summary -->
+      <div class="stats-card">
+        <h4>Overview</h4>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <span class="stat-val" id="statTotal">0</span>
+            <span class="stat-lbl">Total</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val text-warning" id="statPending">0</span>
+            <span class="stat-lbl">Pending</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val text-success" id="statCompleted">0</span>
+            <span class="stat-lbl">Done</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val text-danger" id="statOverdue">0</span>
+            <span class="stat-lbl">Overdue</span>
+          </div>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <small class="progress-text" id="progressText">0% Completed</small>
+      </div>
+
+      <!-- Category Navigation -->
+      <div class="nav-section">
+        <h4>Categories</h4>
+        <ul class="category-list">
+          <li class="active" data-category="ALL">
+            <i class="fa-solid fa-layer-group"></i> All Tasks
+            <span class="badge" id="catCountAll">0</span>
+          </li>
+          <li data-category="Work">
+            <i class="fa-solid fa-briefcase"></i> Work / Office
+            <span class="badge" id="catCountWork">0</span>
+          </li>
+          <li data-category="Personal">
+            <i class="fa-solid fa-user"></i> Personal
+            <span class="badge" id="catCountPersonal">0</span>
+          </li>
+          <li data-category="Learning">
+            <i class="fa-solid fa-graduation-cap"></i> Learning
+            <span class="badge" id="catCountLearning">0</span>
+          </li>
+          <li data-category="Urgent">
+            <i class="fa-solid fa-fire"></i> Urgent
+            <span class="badge" id="catCountUrgent">0</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Status Filters -->
+      <div class="nav-section">
+        <h4>Filter Status</h4>
+        <ul class="filter-list">
+          <li class="active" data-status="ALL"><i class="fa-solid fa-circle-nodes"></i> Show All</li>
+          <li data-status="PENDING"><i class="fa-regular fa-clock"></i> In Progress</li>
+          <li data-status="COMPLETED"><i class="fa-regular fa-circle-check"></i> Completed</li>
+        </ul>
+      </div>
+
+    </aside>
+
+    <!-- Center Content / Tasks Area -->
+    <section class="content-area">
+      
+      <!-- New Task Creation Card -->
+      <div class="card task-creator-card">
+        <h3><i class="fa-solid fa-plus-circle"></i> Create New Task</h3>
+        <form id="taskForm">
+          <div class="form-row">
+            <input type="text" id="taskTitle" placeholder="Task Title (e.g. Prepare API documentation)" required>
+          </div>
+          
+          <div class="form-row grid-3">
+            <select id="taskCategory">
+              <option value="Work">Work / Office</option>
+              <option value="Personal">Personal</option>
+              <option value="Learning">Learning</option>
+              <option value="Urgent">Urgent</option>
+            </select>
+            
+            <select id="taskPriority">
+              <option value="High">🔴 High Priority</option>
+              <option value="Medium" selected>🟡 Medium Priority</option>
+              <option value="Low">🟢 Low Priority</option>
+            </select>
+
+            <input type="date" id="taskDueDate">
+          </div>
+
+          <div class="form-row">
+            <textarea id="taskDesc" placeholder="Optional details or subnotes..." rows="2"></textarea>
+          </div>
+
+          <div class="form-row flex-end">
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Add Task</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Controls & Search Toolbar -->
+      <div class="toolbar">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="searchInput" placeholder="Search tasks by keyword...">
+        </div>
+
+        <div class="sort-box">
+          <label for="sortSelect"><i class="fa-solid fa-arrow-down-short-wide"></i> Sort:</label>
+          <select id="sortSelect">
+            <option value="dateNewest">Newest First</option>
+            <option value="dateOldest">Oldest First</option>
+            <option value="dueDate">Due Date</option>
+            <option value="priority">Priority</option>
+          </select>
+        </div>
+
+        <div class="bulk-actions">
+          <button class="btn btn-danger-outline" id="clearCompletedBtn">
+            <i class="fa-solid fa-trash-can"></i> Clear Completed
+          </button>
+        </div>
+      </div>
+
+      <!-- Task List Container -->
+      <div class="task-list" id="taskListContainer">
+        <!-- Dynamic Task Cards will render here -->
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Edit Task Modal -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Task</h3>
+        <button class="close-btn" id="closeModal">&times;</button>
+      </div>
+      <form id="editTaskForm">
+        <input type="hidden" id="editTaskId">
+        <div class="form-row">
+          <label>Title</label>
+          <input type="text" id="editTaskTitle" required>
+        </div>
+        <div class="form-row grid-3">
+          <div>
+            <label>Category</label>
+            <select id="editTaskCategory">
+              <option value="Work">Work / Office</option>
+              <option value="Personal">Personal</option>
+              <option value="Learning">Learning</option>
+              <option value="Urgent">Urgent</option>
+            </select>
+          </div>
+          <div>
+            <label>Priority</label>
+            <select id="editTaskPriority">
+              <option value="High">🔴 High Priority</option>
+              <option value="Medium">🟡 Medium Priority</option>
+              <option value="Low">🟢 Low Priority</option>
+            </select>
+          </div>
+          <div>
+            <label>Due Date</label>
+            <input type="date" id="editTaskDueDate">
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Description</label>
+          <textarea id="editTaskDesc" rows="3"></textarea>
+        </div>
+        <div class="form-row flex-end">
+          <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
